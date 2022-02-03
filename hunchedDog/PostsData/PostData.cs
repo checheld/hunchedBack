@@ -55,7 +55,8 @@ namespace hunchedDog.PostsData
             {
                 var posts = await db.Posts.ToListAsync();
                 var changingPost = posts.Find(x => x.Id == id);
-                 if (changingPost != null && changingPost != post)
+               post.Id = id;
+                if (changingPost != null && changingPost != post)
                  {
                      db.Posts.Remove(changingPost);
                      changingPost = post;

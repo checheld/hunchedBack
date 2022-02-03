@@ -12,7 +12,7 @@ using hunchedDogBackend.Models;
 namespace hunchedDog.Migrations
 {
     [DbContext(typeof(HunchedContext))]
-    [Migration("20220203073715_Init_1")]
+    [Migration("20220203125945_Init_1")]
     partial class Init_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
