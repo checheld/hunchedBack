@@ -13,7 +13,6 @@ namespace hunchedDogBackend.Models
         /* [ForeignKey("User_Id")]  // добавил из-за ошибки миграции
          public User? User { get; set; }*/
 
-
         public int Post_Id { get; set; }
         //[ForeignKey("Post_Id")]  // добавил из-за ошибки миграции
         // public Post? Post { get; set; }

@@ -33,16 +33,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.RequireHttpsMetadata = false;
     });
 
-
-//builder.Services.AddHttpClient("AccountClient", c =>
-//{
-//    c.DefaultRequestHeaders.Add("Authorization", "TEST");
-//});
 var app = builder.Build();
 
 app.UseRouting();
 app.UseAuthorization();
-/*app.UseAuthentication();*/
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");

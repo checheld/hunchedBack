@@ -19,7 +19,6 @@ namespace hunchedDogBackend.Models
         [Required]
         public string Password { get; set; }
         [MaxLength(30)]
-        /*public string? token { get; set; }*/
 
         public List<Post>? Posts { get; set; } = new List<Post>();
     }

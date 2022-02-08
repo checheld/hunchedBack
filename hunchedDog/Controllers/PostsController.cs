@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hunchedDog.Controllers
 {
     [ApiController]
+    [Authorize(Policy = "Bearer")]
     public class PostsController : ControllerBase
     {
         private PostData _postData = new PostData();
@@ -19,7 +20,6 @@ namespace hunchedDog.Controllers
         }
 
         [HttpGet]
-        /*[Authorize(Policy = "Bearer")]*/
         [Route("posts/post/{id}")]
         public async Task<IActionResult> GetPost(int id)
         {
@@ -40,7 +40,7 @@ namespace hunchedDog.Controllers
         [Route("posts/post/{id}")]
         public async Task<IActionResult> EditPost([FromBody] Post post, int id)
         {
-                var response = await _postData.EditPost(post, id);
+            var response = await _postData.EditPost(post, id);
             return response != null ? Ok(response) : NotFound("This post was not found");
         }
     }

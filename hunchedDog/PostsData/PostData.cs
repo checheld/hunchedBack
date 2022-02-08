@@ -1,5 +1,4 @@
-﻿
-using hunchedDogBackend.Models;
+﻿using hunchedDogBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace hunchedDog.PostsData
@@ -23,11 +22,10 @@ namespace hunchedDog.PostsData
         {
             using (HunchedContext db = new HunchedContext())
             {
-                var posts = await db.Posts.ToListAsync();
-                var neededPost = posts.Find(x => x.Id==id);
-                if (neededPost != null)
+                var post = await db.Posts.SingleOrDefaultAsync(x => x.Id == id);
+                if (post != null)
                 {
-                    return neededPost;
+                    return post;
                 }
                
             }
@@ -38,8 +36,8 @@ namespace hunchedDog.PostsData
         {
             using (HunchedContext db = new HunchedContext())
             {
-                var posts = await db.Posts.ToListAsync();
-                if (posts.Find(x => x.Id == post.Id) == null)
+                var foundPost = await db.Posts.SingleOrDefaultAsync(x => x.Id == post.Id);
+                if (foundPost == null)
                 {
                     await db.Posts.AddAsync(post);
                     await db.SaveChangesAsync();
@@ -53,9 +51,8 @@ namespace hunchedDog.PostsData
         {
             using (HunchedContext db = new HunchedContext())
             {
-                var posts = await db.Posts.ToListAsync();
-                var changingPost = posts.Find(x => x.Id == id);
-               post.Id = id;
+                var changingPost = await db.Posts.SingleOrDefaultAsync(x => x.Id == post.Id);
+                post.Id = id;
                 if (changingPost != null && changingPost != post)
                  {
                      db.Posts.Remove(changingPost);

@@ -9,8 +9,8 @@ namespace hunchedDog.CommentsData
         {
             using (HunchedContext db = new HunchedContext())
             {
-                var comments = await db.Comments.ToListAsync();
-                if (comments.Find(x => x.Id == comment.Id) == null)
+                var foundComment = await db.Comments.FirstOrDefaultAsync(x => x.Id == comment.Id);
+                if (foundComment == null)
                 {
                     await db.Comments.AddAsync(comment);
                     await db.SaveChangesAsync();

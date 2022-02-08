@@ -5,9 +5,8 @@ using hunchedDogBackend.UsersData;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using System.Net.Http.Headers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace hunchedDogBackend.Controllers
 {
@@ -20,51 +19,40 @@ namespace hunchedDogBackend.Controllers
         [Route("auth/sign_up")]
         public async Task<IActionResult> Registration([FromBody] User user)
         {
-            /*return Ok(user);*/
-            return Ok(await _authData.Registration(user));
+            try
+            {
+                var result = await _authData.Registration(user);
+                return Ok(result);
+            }
+            catch (Exception exeption)
+            {
+                return BadRequest(exeption.Message);
+            }
         }
-
-       
 
         [HttpPost]
         [Route("auth/sign_in")]
         public async Task<IActionResult> Login([FromBody] User user)
         {
-            
-            if (await _authData.Login(user, "") == "Login is successed")
+            var isAuthorised = await _authData.Login(user);
+
+            if (isAuthorised)
             {
                 var Jwt = await GenerateJwtToken(user.Email, user.Password);
                 var FoundUser = await Profile(user.Email);
                 var response = new { Jwt, FoundUser };
-                return Ok(response);;
-
+                return Ok(response);
             }
             return BadRequest("User isn't found, try again");
         }
 
         [HttpGet]
+        [Authorize(Policy = "Bearer")]
         [Route("user/profile/{id}")]
         public async Task<IActionResult> GetProfile(int id)
         {
             return Ok(await _authData.GetProfile(id));
         }
-
-
-       /* [HttpPost("loginTest")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login()
-        {
-            var username = "Prerak";
-            if (username == "Prerak")
-            {
-                var token = await GenerateJwtToken(username);
-                return Ok(new { user = username, token = token });
-            }
-            else
-            {
-                return BadRequest("Invalid User");
-            }
-        }*/
 
         private async Task<string> GenerateJwtToken(string email, string password)
         {
@@ -96,18 +84,10 @@ namespace hunchedDogBackend.Controllers
         {
             using (HunchedContext db = new HunchedContext())
             {
-
-                var profiles = await db.Users.ToListAsync();
-
-                var neededProfile = profiles.Find(x => x.Email == email);
-                if (neededProfile != null)
-                {
-                    return neededProfile;
-                }
-
+                var neededProfile = await db.Users.SingleOrDefaultAsync(x => x.Email == email);
+               
+                return neededProfile;
             }
-            return null;
         }
-
     }
 }
